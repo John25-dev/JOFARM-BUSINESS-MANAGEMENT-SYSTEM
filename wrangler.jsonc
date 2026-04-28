@@ -1,5 +1,5 @@
 {
-  "name": "jofarm-business-management-system",
+  "name": "jofarm-organization",
   "main": "app.py",
   "compatibility_date": "2024-04-01",
   "compatibility_flags": ["python_workers"],
