@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .hidden { display: none; } [cite: 77]
+        .active-tab { border-left: 4px solid #10b981; background: #2e1065; } /* Green accent, Purple bg */
+    </style>
+</head>
+<body class="bg-[#0f172a] text-slate-100 font-sans">
+
+    <div id="login-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-[#020617]">
+        <div class="bg-indigo-950/40 p-10 rounded-2xl border border-purple-500/20 w-full max-w-md backdrop-blur-md">
+            <h1 class="text-4xl font-extrabold text-emerald-400 text-center mb-10">JOFARM</h1> [cite: 81]
+            
+            <div class="space-y-4">
+                <div id="reg-fields" class="hidden">
+                    <input type="email" id="email" placeholder="Company Email" class="w-full bg-slate-900 border border-purple-500/30 p-3 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none">
+                </div>
+                <input type="text" id="username" placeholder="Username" class="w-full bg-slate-900 border border-purple-500/30 p-3 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"> [cite: 82]
+                <input type="password" id="password" placeholder="Access Key" class="w-full bg-slate-900 border border-purple-500/30 p-3 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"> [cite: 83]
+                
+                <button onclick="submitAuth()" id="auth-btn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-4 rounded-lg transition-all">AUTHENTICATE</button>
+            </div>
+            
+            <p class="text-center text-xs text-purple-400 mt-6">
+                <a href="javascript:void(0)" onclick="toggleReg()" id="toggle-link">New user? Register here</a>
+            </p>
+        </div>
+    </div>
+
+    <div id="main-console" class="flex min-h-screen hidden">
+        <aside class="w-72 bg-[#1e1b4b] border-r border-purple-500/10 flex flex-col shadow-2xl">
+            <div class="p-8 border-b border-purple-500/20">
+                <h2 class="text-2xl font-black text-emerald-400">JOFARM</h2> [cite: 86]
+            </div>
+            <nav id="nav-menu" class="flex-1 p-4 space-y-2">
+                </nav>
+        </aside>
+        <main class="flex-1 bg-[#020617] p-8">
+            <h2 id="view-title" class="text-3xl font-black text-white uppercase">System Home</h2> [cite: 95]
+            <div id="content-display" class="mt-8 bg-indigo-950/20 border border-purple-500/10 rounded-3xl p-10 min-h-[400px]"></div>
+        </main>
+    </div>
+
+    <script>
+        let isReg = false;
+        function toggleReg() {
+            isReg = !isReg;
+            document.getElementById('reg-fields').classList.toggle('hidden');
+            document.getElementById('auth-btn').innerText = isReg ? "CREATE ACCOUNT" : "AUTHENTICATE";
+        }
+
+        async function submitAuth() {
+            const path = isReg ? '/api/register' : '/api/login';
+            const payload = {
+                username: document.getElementById('username').value,
+                password: document.getElementById('password').value,
+                email: document.getElementById('email').value
+            };
+
+            const res = await fetch(path, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }); [cite: 100, 101]
+
+            const data = await res.json();
+            if (res.ok) {
+                if (isReg) { alert("Registration successful! Please login."); toggleReg(); }
+                else { 
+                    sessionStorage.setItem('role', data.role); [cite: 103]
+                    document.getElementById('login-screen').classList.add('hidden');
+                    document.getElementById('main-console').classList.remove('hidden');
+                    // applyRights logic...
+                }
+            } else { alert(data.error); }
+        }
+    </script>
+</body>
+</html>

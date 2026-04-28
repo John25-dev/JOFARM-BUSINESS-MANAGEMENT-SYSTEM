@@ -1,0 +1,31 @@
+<VirtualHost *:80>
+    ServerName yourdomain.com
+
+    # Redirect all HTTP traffic to HTTPS (handled by Cloudflare)
+    RewriteEngine On
+    RewriteCond %{HTTP:X-Forwarded-Proto} !https
+    RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [L,R=301]
+
+    # Reverse Proxy to Gunicorn/Flask
+    ProxyPreserveHost On
+    ProxyPass / http://127.0.0.1:5000/
+    ProxyPassReverse / http://127.0.0.1:5000/
+
+    # Advanced Security Headers
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set Referrer-Policy "no-referrer-when-downgrade"
+    Header set Content-Security-Policy "default-src 'self'; script-src 'self' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com;"
+    
+    # HSTS (Enable only after testing SSL)
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+
+    # Prevent access to hidden files and database files
+    <FilesMatch "^\.|\.db$|config\.py$">
+        Require all denied
+    </FilesMatch>
+
+    ErrorLog ${APACHE_LOG_DIR}/jofarm_error.log
+    CustomLog ${APACHE_LOG_DIR}/jofarm_access.log combined
+</VirtualHost>

@@ -1,0 +1,13 @@
+{
+  "name": "jofarm-business-management-system",
+  "main": "app.py",
+  "compatibility_date": "2024-04-01",
+  "compatibility_flags": ["python_workers"],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "jofarm_records",
+      "database_id": "dc39142c-d85e-449a-8186-4c09595251fa"
+    }
+  ]
+}
